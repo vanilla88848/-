@@ -1,43 +1,30 @@
 const { Bot } = require('grammy');
 
-const bot = new Bot('8125630577:AAEo0-HA63B4yruK1cKhslWgXpgItzGpdEQ'); // Замените на новый токен!
+const bot = new Bot('8194488237:AAHYDpxPwyO1Fztx4dtA2f7ippra2CJEa4g');
 
-bot.command(['start', 'Start', 'START'], (ctx) => {
-    ctx.reply('Привет! Я бот для игры "Угадай число".\nНапиши /play чтобы начать!');
+bot.command('start', (ctx) => {
+    ctx.reply('Привет! Я простой бот. Напиши /help, чтобы узнать, что я умею!');
 });
 
-let secretNumber = 0;
-let gameIsActive = false;
-
-bot.command(['play', 'Play', 'PLAY'], (ctx) => {
-    secretNumber = Math.floor(Math.random() * 100) + 1;
-    gameIsActive = true;
-    ctx.reply('Я загадал число от 1 до 100! Попробуй угадать!');
+bot.command('help', (ctx) => {
+    ctx.reply('/start - приветствие\n/help - помощь\n/echo - повторить сообщение\n/joke - расскажи шутку');
 });
 
-bot.on('message:text', async (ctx) => {
-    if (!gameIsActive || ctx.message.from.is_bot) return;
-    
-    const guess = Number(ctx.message.text);
-    
-    if (!Number.isInteger(guess)) {
-        await ctx.reply('Пожалуйста, введите целое число!');
-        return;
-    }
-
-    if (guess < secretNumber) {
-        await ctx.reply('Больше!');
-    } else if (guess > secretNumber) {
-        await ctx.reply('Меньше!');
-    } else {
-        await ctx.reply('Вы угадали! Молодец!');
-        gameIsActive = false;
-    }
+bot.command('echo', (ctx) => {
+    const message = ctx.message.text.split(' ').slice(1).join(' ');
+    ctx.reply(message || 'Пожалуйста, введите сообщение для повторения.');
 });
 
-// Запуск с проверкой
-bot.start().then(() => {
-    console.log('Бот успешно запущен!');
-}).catch(err => {
-    console.error('Ошибка запуска:', err);
+bot.command('joke', async (ctx) => {
+    const jokes = [
+        '- Вчера долго пыталась объяснить бабуле, что работаю программистом. \n-- Удалось? \n-- Короче, сошлись на том, что чиню телевизоры и развожу мышей..',
+        '- Почему ваши дети всё время ссорятся? \n-- Конфликт версий',
+        'Программисту нужно попасть на двенадцатый этаж. Он заходит в лифт, нажимает кнопку «i», затем «2» и долго ещё безуспешно ищет глазами клавишу Enter…'
+    ];
+
+    const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+    await ctx.reply(randomJoke);
 });
+
+bot.start();
+console.log('Бот запущен...');
