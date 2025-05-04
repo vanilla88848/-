@@ -1,6 +1,6 @@
 const { Bot } = require('grammy');
 
-const bot = new Bot('8125630577:AAEo0-HA63B4yruK1cKhslWgXpgItzGpdEQ'); // Замените на новый токен!
+const bot = new Bot('8125630577:AAEo0-HA63B4yruK1cKhslWgXpgItzGpdEQ');
 
 bot.command(['start', 'Start', 'START'], (ctx) => {
     ctx.reply('Привет! Я бот для игры "Угадай число".\nНапиши /play чтобы начать!');
